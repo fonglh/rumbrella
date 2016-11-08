@@ -1,0 +1,3 @@
+[submodule "apps/rumbl"]
+	path = apps/rumbl
+	url = git@github.com:fonglh/rumbl.git
