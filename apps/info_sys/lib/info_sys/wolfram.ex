@@ -34,8 +34,10 @@ defmodule InfoSys.Wolfram do
 
   # contact WolframAlpha with the query string that interests us.
   # :httpc is from Erlang's standard library
+  # Get http client from the environment, so we can use a stubbed one for tests
+  @http Application.get_env(:info_sys, :wolfram) [:http_client] || :httpc
   defp fetch_xml(query_str) do
-    {:ok, {_, _, body}} = :httpc.request(
+    {:ok, {_, _, body}} = @http.request(
       String.to_char_list("http://api.wolframalpha.com/v2/query" <>
         "?appid=#{app_id()}" <>
         "&input=#{URI.encode(query_str)}&format=plaintext"))
