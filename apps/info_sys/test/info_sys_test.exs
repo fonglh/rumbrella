@@ -23,6 +23,18 @@ defmodule InfoSysTest do
       # simulates a request that takes too long
       :timer.sleep(:infinity)
     end
+
+    def fetch("boom", _ref, _owner, _limit) do
+      raise "boom!"
+    end
+  end
+
+  # :capture_log tag captures all log messages and only shows them for failing tests
+  @tag :capture_log
+  test "compute/2 discards backend errors" do
+    assert InfoSys.compute("boom", backends: [TestBackend]) == []
+    refute_received {:DOWN, _, _, _, _}
+    refute_received :timedout
   end
 
   test "compute/2 with timeout returns no results and kills workers" do
